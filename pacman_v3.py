@@ -2,7 +2,7 @@ import pygame
 import random
 
 """
-Constantes globales
+Global constants
 """
  
 # Colores
