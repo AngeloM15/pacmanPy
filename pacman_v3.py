@@ -1,3 +1,4 @@
+from typing import Text
 import pygame
 import random
 
@@ -8,16 +9,18 @@ Global constants
 # Colores
 BLACK = (0, 0, 0) 
 WHITE = (255, 255, 255) 
-BLUE = (32, 30, 100)
-RED = (255,0,0)
-GREEN = (44,98,16)
+BLUE = (20, 8, 137)
+RED = (154,5,12)
+GREEN = (8,137,44)
 
 # Dimensiones de la pantalla
-LARGO_PANTALLA  = 900
+LARGO_PANTALLA  = 1000
 ALTO_PANTALLA = 600
 
 #----sprites------#
-game_sprites = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/pacman.png"
+GAME_SPRITES = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/pacman.png"
+
+STATS_SPRITES = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/stats.png"
 #----------------#
 
 class Pacman(pygame.sprite.Sprite):
@@ -32,7 +35,7 @@ class Pacman(pygame.sprite.Sprite):
         # self.image = pygame.Surface([15, 15])
         # self.image.fill(BLANCO)
      
-        self.image = pygame.image.load(game_sprites).convert_alpha()
+        self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
         self.image = self.image.subsurface((853,54,35,34))
 
         #Look
@@ -53,7 +56,7 @@ class Pacman(pygame.sprite.Sprite):
         if self.cambio_x != 0 or self.cambio_y != 0:
 
             # self.image = self.image.subsurface((853,5,35,34))
-            self.image = pygame.image.load(game_sprites).convert_alpha()
+            self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
             # Right
             if self.cambio_x > 0 and self.cambio_y == 0:
                 self.image = self.image.subsurface((853,54,35,34))
@@ -78,8 +81,8 @@ class Pacman(pygame.sprite.Sprite):
         self.change_look()
     
     def reset(self):
-        self.rect.y = 50
-        self.rect.x = 50
+        self.rect.y = 554
+        self.rect.x = 382
 
     def update(self):
         """ Cambia la velocidad del protagonista. """
@@ -144,7 +147,7 @@ class Ghost(pygame.sprite.Sprite):
         # self.image = pygame.Surface([width, height])
         # self.image.fill(color)
 
-        self.image = pygame.image.load(game_sprites).convert_alpha()
+        self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
         
         if select == 0:
             self.image = self.image.subsurface((649,103,38,37))
@@ -152,7 +155,8 @@ class Ghost(pygame.sprite.Sprite):
             self.image = self.image.subsurface((700,103,37,37))
         if select == 2:
             self.image = self.image.subsurface((750,103,38,37))
-
+        if select == 3:
+            self.image = self.image.subsurface((150,103,36,36))
         # Extraemos el objeto rectángulo que posee las dimensiones
         # de la imagen.
         # Estableciendo los valores para rect.x and rect.y actualizamos
@@ -216,7 +220,7 @@ class Coin(pygame.sprite.Sprite):
         # self.image = pygame.Surface([largo, alto])
         # self.image.fill(ROJO)
  
-        self.image = pygame.image.load(game_sprites).convert_alpha()
+        self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
         self.image = self.image.subsurface((410,312,18,18))
 
         # Establece como origen la esquina superior izquierda.
@@ -234,7 +238,7 @@ class Coin(pygame.sprite.Sprite):
 
 
 class Level():
-    def __init__(self, Pared, Coin, Ghost, Pacman,dificulty):
+    def __init__(self,actual_level):
         super().__init__()
 
         # Lista que almacena todos los sprites
@@ -249,14 +253,16 @@ class Level():
         # Coin list
         self.coin_list = pygame.sprite.Group()
 
-        self.dificulty = dificulty
+        self.actual_level = actual_level
 
-        self.stage()
+        self.set_stage()
+        self.set_ghosts()
+        
     
 
-    def stage(self):
+    def set_stage(self):
 
-        if self.dificulty == 0:
+        if self.actual_level == 1:
             color = BLUE
             
             # Block UR
@@ -309,13 +315,13 @@ class Level():
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
-        elif self.dificulty == 1:
+        elif self.actual_level == 2:
             color = GREEN
 
             #----------------------#
             # Add blocks
             #-----------------------#
-        elif self.dificulty == 2:
+        elif self.actual_level == 3:
             color = RED
             #----------------------#
             # Add blocks
@@ -342,7 +348,10 @@ class Level():
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
-
+        # Wall pacman
+        self.pared = Pared(340,534,120,20,color)
+        self.pared_list.add(self.pared)
+        self.all_sprites.add(self.pared)
 
         # Coin
         for x in range(0,800,50):
@@ -358,8 +367,21 @@ class Level():
                     self.coin_list.add(self.coin)
                     self.all_sprites.add(self.coin)
 
-        # Ghost
-        for i in range(3):
+
+    # Set ghosts depending of the dificulty    
+    def set_ghosts(self):
+
+        if self.actual_level == 1:
+            limits = 2
+            ghost_quantity = 2
+        elif self.actual_level == 2:
+            limits = 4
+            ghost_quantity = 3
+        elif self.actual_level == 3:
+            limits = 6
+            ghost_quantity = 4
+        
+        for i in range(ghost_quantity):
             self.ghost = Ghost(i)
             self.ghost.paredes = self.pared_list
 
@@ -369,14 +391,14 @@ class Level():
             
             self.ghost.rect.x = 400
             self.ghost.rect.y = 100
-            
-            self.ghost.cambio_x = random.randrange(-5,5)
+                
+            self.ghost.cambio_x = random.randrange(-1*limits,limits)
             while self.ghost.cambio_x == 0:
-                self.ghost.cambio_x = random.randrange(-5,5)
+                self.ghost.cambio_x = random.randrange(-1*limits,limits)
                   
-            self.ghost.cambio_y = random.randrange(-5,5)
+            self.ghost.cambio_y = random.randrange(-1*limits,limits)
             while self.ghost.cambio_y == 0:
-                self.ghost.cambio_y = random.randrange(-5,5)
+                self.ghost.cambio_y = random.randrange(-1*limits,limits)
 
             self.ghost.limite_izquierdo = 10
             self.ghost.limite_superior = 10
@@ -387,18 +409,105 @@ class Level():
             self.ghost_list.add(self.ghost)
             self.all_sprites.add(self.ghost)
 
+        #--------------Stats-----------------#
+        
+        self.word1 = Stats("Level",0,0,0)
+        self.all_sprites.add(self.word1)
+
+        self.word2 = Stats("Points",0,0,0)
+        self.all_sprites.add(self.word2)
+        
+        self.word3 = Stats("Lives",0,0,0)
+        self.all_sprites.add(self.word3)
+
+        # Stats
+        self.stats = Stats(self.actual_level,3,0,self.actual_level)
+        self.all_sprites.add(self.stats)
+             
+        #------------------------------------#
+        
         # objeto pacman
-        self.protagonista = Pacman(50, 50)
+        self.protagonista = Pacman(382, 554)
         self.protagonista.paredes = self.pared_list
             
         self.all_sprites.add(self.protagonista)
 
 
-class Stats():
+class Stats(pygame.sprite.Sprite):
 
-    def __init__(self,lives,points,actual_level):
+    def __init__(self,text,lives,points, actual_level):
         super().__init__()
 
+        self.lives = lives
+        self.points = points
+        self.actual_level = actual_level
+        self.text = text
+
+        # self.words()
+        
+        if isinstance(self.text, str):
+            self.words()
+        elif isinstance(self.text, int):
+            self.numbers(self.text,"Level")
+
+    def words(self):
+
+        # Level
+        if self.text == "Level":
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((47,103,102,26))
+            self.rect = self.image.get_rect()
+            self.rect.y = 100
+            self.rect.x = 849
+    
+        # Points
+        if self.text == "Points":
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((47,141,120,26))
+            self.rect = self.image.get_rect()
+            self.rect.y = 250
+            self.rect.x = 840
+
+        # Lives
+        if self.text == "Lives":
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((47,179,93,25))
+            self.rect = self.image.get_rect()
+            self.rect.y = 400
+            self.rect.x = 853
+
+    def numbers(self,number,space):
+        
+        # Number 1        
+        if number == 1:
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((13,7,22,36))
+            self.rect = self.image.get_rect()
+        # Number 2
+        elif number == 2:
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((41,7,32,36))
+            self.rect = self.image.get_rect()
+        # Number 3
+        elif number == 3:
+            self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
+            self.image = self.image.subsurface((79,7,32,36))
+            self.rect = self.image.get_rect()
+
+
+        if space == "Level":
+            self.rect.y = 150
+            self.rect.x = 889
+
+        elif space == "Points":
+            self.rect.y = 300
+            self.rect.x = 889
+
+        elif space == "Lives":
+            self.rect.y = 450
+            self.rect.x = 889
+
+#---------------------------------------------------------------------------#
 #---------------------------------------------------------------------------#
 
 # Llamamos a esta función para que la biblioteca Pygame pueda autoiniciarse.
@@ -411,15 +520,11 @@ screen = pygame.display.set_mode([LARGO_PANTALLA, ALTO_PANTALLA])
 pygame.display.set_caption('Pacman')
  
 # Create level
-level = Level(Pared, Coin, Ghost, Pacman,0)
+level = Level(1)
 
-reloj = pygame.time.Clock()
- 
+reloj = pygame.time.Clock() 
+
 hecho = False
-
-lives = 5
-points = 0
-actual_level = 0
 
 while not hecho:
      
@@ -456,34 +561,50 @@ while not hecho:
     
     # Lose lives
     for ghost in ghost_hit_list:
-        lives -= 1
-        print("lives: " + str(lives))
+        level.stats.lives -= 1
+        print("lives: " + str(level.stats.lives))
         level.protagonista.reset()
 
     # Game over
-    if lives == 0:
-        lives = 5
-        points = 0
-        actual_level = 0
+    if level.stats.lives == 0:
 
         del level
-        level = Level(Pared, Coin, Ghost, Pacman,actual_level)
-        pygame.event.clear()
+        level = Level(1)
+        
+        # level.stats.lives = 3
+        print("lives: " + str(level.stats.lives))
+        # level.stats.points = 0
+        # level.stats.actual_level = 1
+        print("level: " + str(level.stats.actual_level))
 
+        pygame.event.clear()
     
     # Desaparece moneda
     get_coin_list = pygame.sprite.spritecollide(level.protagonista, level.coin_list, True)
 
     for coin in get_coin_list:
-        points+=1
-        print("points: "+str(points))
+        level.stats.points += 1
+        print("points: "+str(level.stats.points))
 
         if len(level.coin_list) == 0:
             # New level
-            lives +=1
-            actual_level+=1
+            level.stats.actual_level +=1
+            temp_lives = level.stats.lives +1
+            temp_points = level.stats.points
+
+            if level.stats.actual_level == 4:
+                temp_level = 1
+            else:    
+                temp_level = level.stats.actual_level
+            
+            print("level: " + str(temp_level))
+            
             del level
-            level = Level(Pared, Coin, Ghost, Pacman,actual_level)
+            level = Level(temp_level)
+            level.stats.lives = temp_lives
+            level.stats.points = temp_points
+
+            print("lives: " + str(level.stats.lives))
             pygame.event.clear()
 
 
