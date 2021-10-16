@@ -318,14 +318,180 @@ class Level():
         elif self.actual_level == 2:
             color = GREEN
 
-            #----------------------#
-            # Add blocks
-            #-----------------------#
+            # Block UR
+            self.block = Pared(600,100,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UR
+            self.block = Pared(680,100,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UR_2
+            self.block = Pared(540,160,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UR_2
+            self.block = Pared(560,240,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UL
+            self.block = Pared(100,100,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UL
+            self.block = Pared(120,100,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UL_2
+            self.block = Pared(160,240,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block UL_2
+            self.block = Pared(240,160,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DR
+            self.block = Pared(600,480,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DR
+            self.block = Pared(680,400,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DR_2
+            self.block = Pared(540,360,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DR_2
+            self.block = Pared(560,360,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+            
+            # Block DL
+            self.block = Pared(100,400,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DL
+            self.block = Pared(120,480,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DL_2
+            self.block = Pared(160,360,80,20,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DL_2
+            self.block = Pared(240,360,20,100,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block C
+            self.block = Pared(380,240,40,120,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block C
+            self.block = Pared(340,280,120,40,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
         elif self.actual_level == 3:
             color = RED
-            #----------------------#
-            # Add blocks
-            #-----------------------#
+            # Block DL
+            self.block = Pared(100,400,80,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+  
+            self.block = Pared(125,425,30,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(125,375,30,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+            
+            # Block DR
+            self.block = Pared(635,400,80,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(660,425,30,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(660,375,30,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DM
+            self.block = Pared(325,350,150,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+            
+            # Block F
+            self.block = Pared(150,100,85,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(150,125,25,125,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(175,175,25,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block I
+            self.block = Pared(320,100,25,150,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block E1
+            self.block = Pared(440,100,25,150,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(475,100,40,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(475,225,40,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(475,163,20,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block E2
+            self.block = Pared(595,100,25,150,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(630,100,40,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(630,225,40,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            self.block = Pared(630,163,20,25,color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
 
 
         # Left wall
@@ -524,6 +690,10 @@ level = Level(1)
 
 reloj = pygame.time.Clock() 
 
+
+pygame.mixer.music.load("background.mp3")
+pygame.mixer.music.play(-1, 0.0)
+
 hecho = False
 
 while not hecho:
@@ -613,5 +783,6 @@ while not hecho:
     pygame.display.flip()
  
     reloj.tick(60)
-             
+
+pygame.mixer.music.stop()
 pygame.quit()
