@@ -17,6 +17,8 @@ GREEN = (8,137,44)
 LARGO_PANTALLA  = 1000
 ALTO_PANTALLA = 600
 
+INITIAL_LIVES = 3
+
 #----sprites------#
 GAME_SPRITES = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/pacman.png"
 
@@ -113,7 +115,7 @@ class Pacman(pygame.sprite.Sprite):
                 self.rect.top = bloque.rect.bottom            
   
 
-class Pared(pygame.sprite.Sprite):
+class Wall(pygame.sprite.Sprite):
     """ Pared con la que el protagonista puede encontrarse. """
     def __init__(self, x, y, largo, alto,color):
         """ Constructor para la pared con la que el protagonista puede encontrarse """
@@ -130,22 +132,12 @@ class Pared(pygame.sprite.Sprite):
         self.rect.x = x
 
 
-class Ghost(pygame.sprite.Sprite):  
-    """
-    Esta clase representa la pelota.        
-    Deriva de la clase "Sprite" en Pygame
-    """
+class Ghost(pygame.sprite.Sprite):
      
     def __init__(self, select):
-        """Constructor. Le pasa el color al bloque,
-        así como la posición de x,y """
+
         # Llama a la clase constructor padre (Sprite)
         super().__init__()
- 
-        # Crea una imagen del bloque y lo rellena de color.
-        # También podríamos usar una imagen guardada en disco.
-        # self.image = pygame.Surface([width, height])
-        # self.image.fill(color)
 
         self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
         
@@ -257,6 +249,7 @@ class Level():
 
         self.set_stage()
         self.set_ghosts()
+        self.set_stats()
         
     
 
@@ -266,52 +259,52 @@ class Level():
             color = BLUE
             
             # Block UR
-            self.block = Pared(600,100,80,20,color)
+            self.block = Wall(600,100,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR
-            self.block = Pared(680,100,20,100,color)
+            self.block = Wall(680,100,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Pared(100,100,20,100,color)
+            self.block = Wall(100,100,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Pared(120,100,80,20,color)
+            self.block = Wall(120,100,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Pared(600,480,80,20,color)
+            self.block = Wall(600,480,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Pared(680,400,20,100,color)
+            self.block = Wall(680,400,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
             # Block DL
-            self.block = Pared(100,400,20,100,color)
+            self.block = Wall(100,400,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL
-            self.block = Pared(120,480,80,20,color)
+            self.block = Wall(120,480,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Pared(380,240,40,120,color)
+            self.block = Wall(380,240,40,120,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Pared(340,280,120,40,color)
+            self.block = Wall(340,280,120,40,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
@@ -319,203 +312,203 @@ class Level():
             color = GREEN
 
             # Block UR
-            self.block = Pared(600,100,80,20,color)
+            self.block = Wall(600,100,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR
-            self.block = Pared(680,100,20,100,color)
+            self.block = Wall(680,100,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR_2
-            self.block = Pared(540,160,20,100,color)
+            self.block = Wall(540,160,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR_2
-            self.block = Pared(560,240,80,20,color)
+            self.block = Wall(560,240,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Pared(100,100,20,100,color)
+            self.block = Wall(100,100,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Pared(120,100,80,20,color)
+            self.block = Wall(120,100,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL_2
-            self.block = Pared(160,240,80,20,color)
+            self.block = Wall(160,240,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL_2
-            self.block = Pared(240,160,20,100,color)
+            self.block = Wall(240,160,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Pared(600,480,80,20,color)
+            self.block = Wall(600,480,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Pared(680,400,20,100,color)
+            self.block = Wall(680,400,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR_2
-            self.block = Pared(540,360,20,100,color)
+            self.block = Wall(540,360,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR_2
-            self.block = Pared(560,360,80,20,color)
+            self.block = Wall(560,360,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
             # Block DL
-            self.block = Pared(100,400,20,100,color)
+            self.block = Wall(100,400,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL
-            self.block = Pared(120,480,80,20,color)
+            self.block = Wall(120,480,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL_2
-            self.block = Pared(160,360,80,20,color)
+            self.block = Wall(160,360,80,20,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL_2
-            self.block = Pared(240,360,20,100,color)
+            self.block = Wall(240,360,20,100,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Pared(380,240,40,120,color)
+            self.block = Wall(380,240,40,120,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Pared(340,280,120,40,color)
+            self.block = Wall(340,280,120,40,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
         elif self.actual_level == 3:
             color = RED
             # Block DL
-            self.block = Pared(100,400,80,25,color)
+            self.block = Wall(100,400,80,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
   
-            self.block = Pared(125,425,30,25,color)
+            self.block = Wall(125,425,30,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(125,375,30,25,color)
+            self.block = Wall(125,375,30,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
             # Block DR
-            self.block = Pared(635,400,80,25,color)
+            self.block = Wall(635,400,80,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(660,425,30,25,color)
+            self.block = Wall(660,425,30,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(660,375,30,25,color)
+            self.block = Wall(660,375,30,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DM
-            self.block = Pared(325,350,150,25,color)
+            self.block = Wall(325,350,150,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
             
             # Block F
-            self.block = Pared(150,100,85,25,color)
+            self.block = Wall(150,100,85,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(150,125,25,125,color)
+            self.block = Wall(150,125,25,125,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(175,175,25,25,color)
+            self.block = Wall(175,175,25,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block I
-            self.block = Pared(320,100,25,150,color)
+            self.block = Wall(320,100,25,150,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block E1
-            self.block = Pared(440,100,25,150,color)
+            self.block = Wall(440,100,25,150,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(475,100,40,25,color)
+            self.block = Wall(475,100,40,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(475,225,40,25,color)
+            self.block = Wall(475,225,40,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(475,163,20,25,color)
+            self.block = Wall(475,163,20,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block E2
-            self.block = Pared(595,100,25,150,color)
+            self.block = Wall(595,100,25,150,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(630,100,40,25,color)
+            self.block = Wall(630,100,40,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(630,225,40,25,color)
+            self.block = Wall(630,225,40,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Pared(630,163,20,25,color)
+            self.block = Wall(630,163,20,25,color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
 
         # Left wall
-        self.pared = Pared(0,0,10,600,color)
+        self.pared = Wall(0,0,10,600,color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Right wall
-        self.pared = Pared(790,0,10,600,color)
+        self.pared = Wall(790,0,10,600,color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Up wall
-        self.pared = Pared(10,0,790,10,color)
+        self.pared = Wall(10,0,790,10,color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Down wall
-        self.pared = Pared(10,590,790,10,color)
+        self.pared = Wall(10,590,790,10,color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Wall pacman
-        self.pared = Pared(340,534,120,20,color)
+        self.pared = Wall(340,534,120,20,color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
@@ -576,18 +569,19 @@ class Level():
             self.all_sprites.add(self.ghost)
 
         #--------------Stats-----------------#
-        
+    def set_stats(self):
+
         self.word1 = Stats("Level",0,0,0)
         self.all_sprites.add(self.word1)
 
-        self.word2 = Stats("Points",0,0,0)
-        self.all_sprites.add(self.word2)
+        # self.word2 = Stats("Points",0,0,0)
+        # self.all_sprites.add(self.word2)
         
-        self.word3 = Stats("Lives",0,0,0)
-        self.all_sprites.add(self.word3)
+        # self.word3 = Stats("Lives",0,0,0)
+        # self.all_sprites.add(self.word3)
 
         # Stats
-        self.stats = Stats(self.actual_level,3,0,self.actual_level)
+        self.stats = Stats(self.actual_level,INITIAL_LIVES,0,self.actual_level)
         self.all_sprites.add(self.stats)
              
         #------------------------------------#
@@ -679,7 +673,7 @@ class Stats(pygame.sprite.Sprite):
 # Llamamos a esta función para que la biblioteca Pygame pueda autoiniciarse.
 pygame.init()
  
-# Creamos una pantalla de 800x600
+# Creamos una pantalla de 1000x600
 screen = pygame.display.set_mode([LARGO_PANTALLA, ALTO_PANTALLA])
  
 # Creamos el título de la ventana
@@ -690,7 +684,7 @@ level = Level(1)
 
 reloj = pygame.time.Clock() 
 
-
+# Add music
 pygame.mixer.music.load("background.mp3")
 pygame.mixer.music.play(-1, 0.0)
 
