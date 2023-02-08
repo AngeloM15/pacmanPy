@@ -8,8 +8,8 @@ import os
 
 import tomli
 
-CONFIG_PATH = "/".join(os.path.abspath(__file__).split("/")[:-1]) + "/config"
-SPRITES_PATH = "/".join(os.path.abspath(__file__).split("/")[:-1]) + "/sprites"
+CONFIG_PATH = "/".join(os.path.abspath(__file__).split("/")[:-2]) + "/config"
+ASSETS_PATH = "/".join(os.path.abspath(__file__).split("/")[:-2]) + "/assets"
 
 CONF_FILE = {"config": "config.toml"}
 
@@ -32,7 +32,7 @@ class Config:
     characters: str
 
     def __init__(self):
-        self.path = SPRITES_PATH
+        self.path = ASSETS_PATH
         self.config = self.load_config(CONF_FILE["config"])
 
         self.load_screen()

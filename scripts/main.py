@@ -1,9 +1,8 @@
 import random
 from typing import Text
 
-import pygame
-
 import lib_config
+import pygame
 
 # Colores
 BLACK = (0, 0, 0)
@@ -16,9 +15,9 @@ GREEN = (8, 137, 44)
 INITIAL_LIVES = 3
 
 # ----sprites------#
-GAME_SPRITES = "sprites/pacman.png"
+GAME_SPRITES = "assets/sprites/pacman.png"
 
-STATS_SPRITES = "sprites/stats.png"
+STATS_SPRITES = "assets/sprites/stats.png"
 # ----------------#
 
 
@@ -686,7 +685,7 @@ def main():
     reloj = pygame.time.Clock()
 
     # Add music
-    pygame.mixer.music.load("background.mp3")
+    pygame.mixer.music.load("assets/music/background.mp3")
     pygame.mixer.music.play(-1, 0.0)
 
     hecho = False
