@@ -24,7 +24,7 @@ STATS_SPRITES = "assets/sprites/stats.png"
 class Pacman(pygame.sprite.Sprite):
     """Esta clase representa la barra inferior que controla el protagonista."""
 
-    # Función Constructor
+    # Constructor function
     def __init__(self, x, y):
         #  Llama al constructor padre
         super().__init__()
