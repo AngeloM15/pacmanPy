@@ -1,58 +1,55 @@
-from typing import Text
-import pygame
 import random
+from typing import Text
 
-"""
-Global constants
-"""
- 
+import pygame
+
+import lib_config
+
 # Colores
-BLACK = (0, 0, 0) 
-WHITE = (255, 255, 255) 
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 BLUE = (20, 8, 137)
-RED = (154,5,12)
-GREEN = (8,137,44)
+RED = (154, 5, 12)
+GREEN = (8, 137, 44)
 
-# Dimensiones de la pantalla
-LARGO_PANTALLA  = 1000
-ALTO_PANTALLA = 600
 
 INITIAL_LIVES = 3
 
-#----sprites------#
-GAME_SPRITES = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/pacman.png"
+# ----sprites------#
+GAME_SPRITES = "sprites/pacman.png"
 
-STATS_SPRITES = "E:/Apuntes/FIEE 2021-2/algoritmos/Scripts/Game/stats.png"
-#----------------#
+STATS_SPRITES = "sprites/stats.png"
+# ----------------#
+
 
 class Pacman(pygame.sprite.Sprite):
-    """ Esta clase representa la barra inferior que controla el protagonista. """
- 
-    # Función Constructor 
+    """Esta clase representa la barra inferior que controla el protagonista."""
+
+    # Función Constructor
     def __init__(self, x, y):
         #  Llama al constructor padre
         super().__init__()
-  
+
         # Establecemos el alto y largo
         # self.image = pygame.Surface([15, 15])
         # self.image.fill(BLANCO)
-     
-        self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
-        self.image = self.image.subsurface((853,54,35,34))
 
-        #Look
+        self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
+        self.image = self.image.subsurface((853, 54, 35, 34))
+
+        # Look
         self.look = True
-        
+
         # Establece como origen la esquina superior izquierda.
         self.rect = self.image.get_rect()
         self.rect.y = y
         self.rect.x = x
- 
+
         # Establecemos el vector velocidad
         self.cambio_x = 0
         self.cambio_y = 0
         self.paredes = None
-     
+
     def change_look(self):
 
         if self.cambio_x != 0 or self.cambio_y != 0:
@@ -61,71 +58,72 @@ class Pacman(pygame.sprite.Sprite):
             self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
             # Right
             if self.cambio_x > 0 and self.cambio_y == 0:
-                self.image = self.image.subsurface((853,54,35,34))
+                self.image = self.image.subsurface((853, 54, 35, 34))
             # Left
             elif self.cambio_x < 0 and self.cambio_y == 0:
-                self.image = self.image.subsurface((853,354,35,34))
+                self.image = self.image.subsurface((853, 354, 35, 34))
             # Up
             elif self.cambio_x == 0 and self.cambio_y > 0:
-                self.image = self.image.subsurface((853,204,35,34))    
+                self.image = self.image.subsurface((853, 204, 35, 34))
             # Down
             elif self.cambio_x == 0 and self.cambio_y < 0:
-                self.image = self.image.subsurface((853,507,35,34))
+                self.image = self.image.subsurface((853, 507, 35, 34))
             # Diagonal
             else:
-                self.image = self.image.subsurface((853,5,35,34))
-            
+                self.image = self.image.subsurface((853, 5, 35, 34))
+
     def cambiovelocidad(self, x, y):
-        """ Cambia la velocidad del protagonista. """
+        """Cambia la velocidad del protagonista."""
         self.cambio_x += x
         self.cambio_y += y
-        
+
         self.change_look()
-    
+
     def reset(self):
         self.rect.y = 554
         self.rect.x = 382
 
     def update(self):
-        """ Cambia la velocidad del protagonista. """
+        """Cambia la velocidad del protagonista."""
         # Desplazar izquierda/derecha
         self.rect.x += self.cambio_x
-         
+
         # Hemos chocado contra la pared después de esta actualización?
         lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False)
         for bloque in lista_impactos_bloques:
-            #Si nos estamos desplazando hacia la derecha, hacemos que nuestro lado derecho sea el lado izquierdo del objeto que hemos tocado-
+            # Si nos estamos desplazando hacia la derecha, hacemos que nuestro lado derecho sea el lado izquierdo del objeto que hemos tocado-
             if self.cambio_x > 0:
                 self.rect.right = bloque.rect.left
             else:
                 # En caso contrario, si nos desplazamos hacia la izquierda, hacemos lo opuesto.
                 self.rect.left = bloque.rect.right
- 
+
         # Desplazar arriba/izquierda
         self.rect.y += self.cambio_y
-          
+
         # Comprobamos si hemos chocado contra algo
-        lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False) 
+        lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False)
         for bloque in lista_impactos_bloques:
-                 
+
             # Reseteamos nuestra posición basándonos en la parte superior/inferior del objeto.
             if self.cambio_y > 0:
-                self.rect.bottom = bloque.rect.top 
+                self.rect.bottom = bloque.rect.top
             else:
-                self.rect.top = bloque.rect.bottom            
-  
+                self.rect.top = bloque.rect.bottom
+
 
 class Wall(pygame.sprite.Sprite):
-    """ Pared con la que el protagonista puede encontrarse. """
-    def __init__(self, x, y, largo, alto,color):
-        """ Constructor para la pared con la que el protagonista puede encontrarse """
+    """Pared con la que el protagonista puede encontrarse."""
+
+    def __init__(self, x, y, largo, alto, color):
+        """Constructor para la pared con la que el protagonista puede encontrarse"""
         #  Llama al constructor padre
         super().__init__()
- 
+
         # Construye una pared azul con las dimensiones especificadas por los parámetros
         self.image = pygame.Surface([largo, alto])
         self.image.fill(color)
- 
+
         # Establece como origen la esquina superior izquierda.
         self.rect = self.image.get_rect()
         self.rect.y = y
@@ -133,52 +131,51 @@ class Wall(pygame.sprite.Sprite):
 
 
 class Ghost(pygame.sprite.Sprite):
-     
     def __init__(self, select):
 
         # Llama a la clase constructor padre (Sprite)
         super().__init__()
 
         self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
-        
+
         if select == 0:
-            self.image = self.image.subsurface((649,103,38,37))
+            self.image = self.image.subsurface((649, 103, 38, 37))
         if select == 1:
-            self.image = self.image.subsurface((700,103,37,37))
+            self.image = self.image.subsurface((700, 103, 37, 37))
         if select == 2:
-            self.image = self.image.subsurface((750,103,38,37))
+            self.image = self.image.subsurface((750, 103, 38, 37))
         if select == 3:
-            self.image = self.image.subsurface((150,103,36,36))
+            self.image = self.image.subsurface((150, 103, 36, 36))
         # Extraemos el objeto rectángulo que posee las dimensiones
         # de la imagen.
         # Estableciendo los valores para rect.x and rect.y actualizamos
         # la posición de este objeto.
         self.rect = self.image.get_rect()
- 
+
         # Variables de instancia que controlan los bordes
         # donde rebotamos
         self.limite_izquierdo = 0
         self.limite_derecho = 0
         self.limite_superior = 0
         self.limite_inferior = 0
- 
+
         # Variables de instancia que controlan nuestras
         # velocidades y dirección actuales
         self.cambio_x = 0
         self.cambio_y = 0
-            
+
         self.paredes = None
- 
+
     # Llamada para cada fotograma.
     def update(self):
-        #------------------------------------------------------------------#
+        # ------------------------------------------------------------------#
         # Desplazar izquierda/derecha
         self.rect.x += self.cambio_x
-         
+
         # Hemos chocado contra la pared después de esta actualización?
         lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False)
         for bloque in lista_impactos_bloques:
-            #Si nos estamos desplazando hacia la derecha, hacemos que nuestro lado derecho sea el lado izquierdo del objeto que hemos tocado-
+            # Si nos estamos desplazando hacia la derecha, hacemos que nuestro lado derecho sea el lado izquierdo del objeto que hemos tocado-
             if self.cambio_x > 0:
                 self.rect.right = bloque.rect.left
             else:
@@ -188,32 +185,33 @@ class Ghost(pygame.sprite.Sprite):
 
         # Desplazar arriba/izquierda
         self.rect.y += self.cambio_y
-          
+
         # Comprobamos si hemos chocado contra algo
-        lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False) 
+        lista_impactos_bloques = pygame.sprite.spritecollide(self, self.paredes, False)
         for bloque in lista_impactos_bloques:
-                 
+
             # Reseteamos nuestra posición basándonos en la parte superior/inferior del objeto.
             if self.cambio_y > 0:
-                self.rect.bottom = bloque.rect.top 
+                self.rect.bottom = bloque.rect.top
             else:
                 self.rect.top = bloque.rect.bottom
             self.cambio_y *= -1
 
 
 class Coin(pygame.sprite.Sprite):
-    """ Pared con la que el protagonista puede encontrarse. """
+    """Pared con la que el protagonista puede encontrarse."""
+
     def __init__(self, x, y):
-        """ Constructor para la pared con la que el protagonista puede encontrarse """
+        """Constructor para la pared con la que el protagonista puede encontrarse"""
         #  Llama al constructor padre
         super().__init__()
- 
+
         # Construye una pared azul con las dimensiones especificadas por los parámetros
         # self.image = pygame.Surface([largo, alto])
         # self.image.fill(ROJO)
- 
+
         self.image = pygame.image.load(GAME_SPRITES).convert_alpha()
-        self.image = self.image.subsurface((410,312,18,18))
+        self.image = self.image.subsurface((410, 312, 18, 18))
 
         # Establece como origen la esquina superior izquierda.
         self.rect = self.image.get_rect()
@@ -229,13 +227,13 @@ class Coin(pygame.sprite.Sprite):
             self.delete = True
 
 
-class Level():
-    def __init__(self,actual_level):
+class Level:
+    def __init__(self, actual_level):
         super().__init__()
 
         # Lista que almacena todos los sprites
         self.all_sprites = pygame.sprite.Group()
-        
+
         # Construimos las paredes. (x_pos, y_pos, largo, alto)
         self.pared_list = pygame.sprite.Group()
 
@@ -250,284 +248,280 @@ class Level():
         self.set_stage()
         self.set_ghosts()
         self.set_stats()
-        
-    
 
     def set_stage(self):
 
         if self.actual_level == 1:
             color = BLUE
-            
+
             # Block UR
-            self.block = Wall(600,100,80,20,color)
+            self.block = Wall(600, 100, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR
-            self.block = Wall(680,100,20,100,color)
+            self.block = Wall(680, 100, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Wall(100,100,20,100,color)
+            self.block = Wall(100, 100, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Wall(120,100,80,20,color)
+            self.block = Wall(120, 100, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Wall(600,480,80,20,color)
+            self.block = Wall(600, 480, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Wall(680,400,20,100,color)
-            self.pared_list.add(self.block)
-            self.all_sprites.add(self.block)
-            
-            # Block DL
-            self.block = Wall(100,400,20,100,color)
+            self.block = Wall(680, 400, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL
-            self.block = Wall(120,480,80,20,color)
+            self.block = Wall(100, 400, 20, 100, color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DL
+            self.block = Wall(120, 480, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Wall(380,240,40,120,color)
+            self.block = Wall(380, 240, 40, 120, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Wall(340,280,120,40,color)
+            self.block = Wall(340, 280, 120, 40, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
-            
+
         elif self.actual_level == 2:
             color = GREEN
 
             # Block UR
-            self.block = Wall(600,100,80,20,color)
+            self.block = Wall(600, 100, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR
-            self.block = Wall(680,100,20,100,color)
+            self.block = Wall(680, 100, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR_2
-            self.block = Wall(540,160,20,100,color)
+            self.block = Wall(540, 160, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UR_2
-            self.block = Wall(560,240,80,20,color)
+            self.block = Wall(560, 240, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Wall(100,100,20,100,color)
+            self.block = Wall(100, 100, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL
-            self.block = Wall(120,100,80,20,color)
+            self.block = Wall(120, 100, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL_2
-            self.block = Wall(160,240,80,20,color)
+            self.block = Wall(160, 240, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block UL_2
-            self.block = Wall(240,160,20,100,color)
+            self.block = Wall(240, 160, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Wall(600,480,80,20,color)
+            self.block = Wall(600, 480, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR
-            self.block = Wall(680,400,20,100,color)
+            self.block = Wall(680, 400, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR_2
-            self.block = Wall(540,360,20,100,color)
+            self.block = Wall(540, 360, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DR_2
-            self.block = Wall(560,360,80,20,color)
-            self.pared_list.add(self.block)
-            self.all_sprites.add(self.block)
-            
-            # Block DL
-            self.block = Wall(100,400,20,100,color)
+            self.block = Wall(560, 360, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL
-            self.block = Wall(120,480,80,20,color)
+            self.block = Wall(100, 400, 20, 100, color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
+            # Block DL
+            self.block = Wall(120, 480, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL_2
-            self.block = Wall(160,360,80,20,color)
+            self.block = Wall(160, 360, 80, 20, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DL_2
-            self.block = Wall(240,360,20,100,color)
+            self.block = Wall(240, 360, 20, 100, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Wall(380,240,40,120,color)
+            self.block = Wall(380, 240, 40, 120, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block C
-            self.block = Wall(340,280,120,40,color)
+            self.block = Wall(340, 280, 120, 40, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
         elif self.actual_level == 3:
             color = RED
             # Block DL
-            self.block = Wall(100,400,80,25,color)
-            self.pared_list.add(self.block)
-            self.all_sprites.add(self.block)
-  
-            self.block = Wall(125,425,30,25,color)
+            self.block = Wall(100, 400, 80, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(125,375,30,25,color)
+            self.block = Wall(125, 425, 30, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
-            
+
+            self.block = Wall(125, 375, 30, 25, color)
+            self.pared_list.add(self.block)
+            self.all_sprites.add(self.block)
+
             # Block DR
-            self.block = Wall(635,400,80,25,color)
+            self.block = Wall(635, 400, 80, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(660,425,30,25,color)
+            self.block = Wall(660, 425, 30, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(660,375,30,25,color)
+            self.block = Wall(660, 375, 30, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block DM
-            self.block = Wall(325,350,150,25,color)
+            self.block = Wall(325, 350, 150, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
-            
+
             # Block F
-            self.block = Wall(150,100,85,25,color)
+            self.block = Wall(150, 100, 85, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(150,125,25,125,color)
+            self.block = Wall(150, 125, 25, 125, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(175,175,25,25,color)
+            self.block = Wall(175, 175, 25, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block I
-            self.block = Wall(320,100,25,150,color)
+            self.block = Wall(320, 100, 25, 150, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block E1
-            self.block = Wall(440,100,25,150,color)
+            self.block = Wall(440, 100, 25, 150, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(475,100,40,25,color)
+            self.block = Wall(475, 100, 40, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(475,225,40,25,color)
+            self.block = Wall(475, 225, 40, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(475,163,20,25,color)
+            self.block = Wall(475, 163, 20, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
             # Block E2
-            self.block = Wall(595,100,25,150,color)
+            self.block = Wall(595, 100, 25, 150, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(630,100,40,25,color)
+            self.block = Wall(630, 100, 40, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(630,225,40,25,color)
+            self.block = Wall(630, 225, 40, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
 
-            self.block = Wall(630,163,20,25,color)
+            self.block = Wall(630, 163, 20, 25, color)
             self.pared_list.add(self.block)
             self.all_sprites.add(self.block)
-
 
         # Left wall
-        self.pared = Wall(0,0,10,600,color)
+        self.pared = Wall(0, 0, 10, 600, color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Right wall
-        self.pared = Wall(790,0,10,600,color)
+        self.pared = Wall(790, 0, 10, 600, color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Up wall
-        self.pared = Wall(10,0,790,10,color)
+        self.pared = Wall(10, 0, 790, 10, color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Down wall
-        self.pared = Wall(10,590,790,10,color)
+        self.pared = Wall(10, 590, 790, 10, color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Wall pacman
-        self.pared = Wall(340,534,120,20,color)
+        self.pared = Wall(340, 534, 120, 20, color)
         self.pared_list.add(self.pared)
         self.all_sprites.add(self.pared)
 
         # Coin
-        for x in range(0,800,50):
-            for y in range(0,600,50):
+        for x in range(0, 800, 50):
+            for y in range(0, 600, 50):
 
-                self.coin = Coin(x,y)
+                self.coin = Coin(x, y)
                 self.coin.wall = self.pared_list
                 self.coin.check_position()
 
                 if self.coin.delete == True:
-                    del self.coin   
+                    del self.coin
                 else:
                     self.coin_list.add(self.coin)
                     self.all_sprites.add(self.coin)
 
-
-    # Set ghosts depending of the dificulty    
+    # Set ghosts depending of the dificulty
     def set_ghosts(self):
 
         if self.actual_level == 1:
@@ -539,7 +533,7 @@ class Level():
         elif self.actual_level == 3:
             limits = 6
             ghost_quantity = 4
-        
+
         for i in range(ghost_quantity):
             self.ghost = Ghost(i)
             self.ghost.paredes = self.pared_list
@@ -547,55 +541,55 @@ class Level():
             # Establece una ubicación aleatoria para el bloque
             # ghost.rect.x = random.randrange(10,LARGO_PANTALLA-10)
             # ghost.rect.y = random.randrange(10,ALTO_PANTALLA-10)
-            
+
             self.ghost.rect.x = 400
             self.ghost.rect.y = 100
-                
-            self.ghost.cambio_x = random.randrange(-1*limits,limits)
+
+            self.ghost.cambio_x = random.randrange(-1 * limits, limits)
             while self.ghost.cambio_x == 0:
-                self.ghost.cambio_x = random.randrange(-1*limits,limits)
-                  
-            self.ghost.cambio_y = random.randrange(-1*limits,limits)
+                self.ghost.cambio_x = random.randrange(-1 * limits, limits)
+
+            self.ghost.cambio_y = random.randrange(-1 * limits, limits)
             while self.ghost.cambio_y == 0:
-                self.ghost.cambio_y = random.randrange(-1*limits,limits)
+                self.ghost.cambio_y = random.randrange(-1 * limits, limits)
 
             self.ghost.limite_izquierdo = 10
             self.ghost.limite_superior = 10
             self.ghost.limite_derecho = 790
             self.ghost.limite_inferior = 590
 
-            #Añade el bloque a la lista de objetos
+            # Añade el bloque a la lista de objetos
             self.ghost_list.add(self.ghost)
             self.all_sprites.add(self.ghost)
 
-        #--------------Stats-----------------#
+        # --------------Stats-----------------#
+
     def set_stats(self):
 
-        self.word1 = Stats("Level",0,0,0)
+        self.word1 = Stats("Level", 0, 0, 0)
         self.all_sprites.add(self.word1)
 
         # self.word2 = Stats("Points",0,0,0)
         # self.all_sprites.add(self.word2)
-        
+
         # self.word3 = Stats("Lives",0,0,0)
         # self.all_sprites.add(self.word3)
 
         # Stats
-        self.stats = Stats(self.actual_level,INITIAL_LIVES,0,self.actual_level)
+        self.stats = Stats(self.actual_level, INITIAL_LIVES, 0, self.actual_level)
         self.all_sprites.add(self.stats)
-             
-        #------------------------------------#
-        
+
+        # ------------------------------------#
+
         # objeto pacman
         self.protagonista = Pacman(382, 554)
         self.protagonista.paredes = self.pared_list
-            
+
         self.all_sprites.add(self.protagonista)
 
 
 class Stats(pygame.sprite.Sprite):
-
-    def __init__(self,text,lives,points, actual_level):
+    def __init__(self, text, lives, points, actual_level):
         super().__init__()
 
         self.lives = lives
@@ -604,26 +598,26 @@ class Stats(pygame.sprite.Sprite):
         self.text = text
 
         # self.words()
-        
+
         if isinstance(self.text, str):
             self.words()
         elif isinstance(self.text, int):
-            self.numbers(self.text,"Level")
+            self.numbers(self.text, "Level")
 
     def words(self):
 
         # Level
         if self.text == "Level":
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((47,103,102,26))
+            self.image = self.image.subsurface((47, 103, 102, 26))
             self.rect = self.image.get_rect()
             self.rect.y = 100
             self.rect.x = 849
-    
+
         # Points
         if self.text == "Points":
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((47,141,120,26))
+            self.image = self.image.subsurface((47, 141, 120, 26))
             self.rect = self.image.get_rect()
             self.rect.y = 250
             self.rect.x = 840
@@ -631,29 +625,28 @@ class Stats(pygame.sprite.Sprite):
         # Lives
         if self.text == "Lives":
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((47,179,93,25))
+            self.image = self.image.subsurface((47, 179, 93, 25))
             self.rect = self.image.get_rect()
             self.rect.y = 400
             self.rect.x = 853
 
-    def numbers(self,number,space):
-        
-        # Number 1        
+    def numbers(self, number, space):
+
+        # Number 1
         if number == 1:
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((13,7,22,36))
+            self.image = self.image.subsurface((13, 7, 22, 36))
             self.rect = self.image.get_rect()
         # Number 2
         elif number == 2:
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((41,7,32,36))
+            self.image = self.image.subsurface((41, 7, 32, 36))
             self.rect = self.image.get_rect()
         # Number 3
         elif number == 3:
             self.image = pygame.image.load(STATS_SPRITES).convert_alpha()
-            self.image = self.image.subsurface((79,7,32,36))
+            self.image = self.image.subsurface((79, 7, 32, 36))
             self.rect = self.image.get_rect()
-
 
         if space == "Level":
             self.rect.y = 150
@@ -667,116 +660,131 @@ class Stats(pygame.sprite.Sprite):
             self.rect.y = 450
             self.rect.x = 889
 
-#---------------------------------------------------------------------------#
-#---------------------------------------------------------------------------#
 
-# Llamamos a esta función para que la biblioteca Pygame pueda autoiniciarse.
-pygame.init()
- 
-# Creamos una pantalla de 1000x600
-screen = pygame.display.set_mode([LARGO_PANTALLA, ALTO_PANTALLA])
- 
-# Creamos el título de la ventana
-pygame.display.set_caption('Pacman')
- 
-# Create level
-level = Level(1)
+# ---------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------#
 
-reloj = pygame.time.Clock() 
 
-# Add music
-pygame.mixer.music.load("background.mp3")
-pygame.mixer.music.play(-1, 0.0)
+def main():
 
-hecho = False
+    # Load configuration
 
-while not hecho:
-     
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            hecho = True
- 
-        elif evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_LEFT:
-                level.protagonista.cambiovelocidad(-3,0)
-            elif evento.key == pygame.K_RIGHT:
-                level.protagonista.cambiovelocidad(3,0)
-            elif evento.key == pygame.K_UP:
-                level.protagonista.cambiovelocidad(0,-3)
-            elif evento.key == pygame.K_DOWN:
-                level.protagonista.cambiovelocidad(0,3)
-                 
-        elif evento.type == pygame.KEYUP:
-            if evento.key == pygame.K_LEFT:
-                level.protagonista.cambiovelocidad(3,0)
-            elif evento.key == pygame.K_RIGHT:
-                level.protagonista.cambiovelocidad(-3,0)
-            elif evento.key == pygame.K_UP:
-                level.protagonista.cambiovelocidad(0,3)
-            elif evento.key == pygame.K_DOWN:
-                level.protagonista.cambiovelocidad(0,-3)
-  
-    level.all_sprites.update()
-     
-    screen.fill(BLACK)
-    
-    # Desaparece fantasma
-    ghost_hit_list = pygame.sprite.spritecollide(level.protagonista, level.ghost_list, False)
-    
-    # Lose lives
-    for ghost in ghost_hit_list:
-        level.stats.lives -= 1
-        print("lives: " + str(level.stats.lives))
-        level.protagonista.reset()
+    config = lib_config.Config()
 
-    # Game over
-    if level.stats.lives == 0:
+    # Llamamos a esta función para que la biblioteca Pygame pueda autoiniciarse.
+    pygame.init()
 
-        del level
-        level = Level(1)
-        
-        # level.stats.lives = 3
-        print("lives: " + str(level.stats.lives))
-        # level.stats.points = 0
-        # level.stats.actual_level = 1
-        print("level: " + str(level.stats.actual_level))
+    # Creamos una pantalla de 1000x600
+    screen = pygame.display.set_mode([config.screen_length, config.screen_height])
 
-        pygame.event.clear()
-    
-    # Desaparece moneda
-    get_coin_list = pygame.sprite.spritecollide(level.protagonista, level.coin_list, True)
+    # Creamos el título de la ventana
+    pygame.display.set_caption("Pacman")
 
-    for coin in get_coin_list:
-        level.stats.points += 1
-        print("points: "+str(level.stats.points))
+    # Create level
+    level = Level(1)
 
-        if len(level.coin_list) == 0:
-            # New level
-            level.stats.actual_level +=1
-            temp_lives = level.stats.lives +1
-            temp_points = level.stats.points
+    reloj = pygame.time.Clock()
 
-            if level.stats.actual_level == 4:
-                temp_level = 1
-            else:    
-                temp_level = level.stats.actual_level
-            
-            print("level: " + str(temp_level))
-            
-            del level
-            level = Level(temp_level)
-            level.stats.lives = temp_lives
-            level.stats.points = temp_points
+    # Add music
+    pygame.mixer.music.load("background.mp3")
+    pygame.mixer.music.play(-1, 0.0)
 
+    hecho = False
+
+    while not hecho:
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                hecho = True
+
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_LEFT:
+                    level.protagonista.cambiovelocidad(-3, 0)
+                elif evento.key == pygame.K_RIGHT:
+                    level.protagonista.cambiovelocidad(3, 0)
+                elif evento.key == pygame.K_UP:
+                    level.protagonista.cambiovelocidad(0, -3)
+                elif evento.key == pygame.K_DOWN:
+                    level.protagonista.cambiovelocidad(0, 3)
+
+            elif evento.type == pygame.KEYUP:
+                if evento.key == pygame.K_LEFT:
+                    level.protagonista.cambiovelocidad(3, 0)
+                elif evento.key == pygame.K_RIGHT:
+                    level.protagonista.cambiovelocidad(-3, 0)
+                elif evento.key == pygame.K_UP:
+                    level.protagonista.cambiovelocidad(0, 3)
+                elif evento.key == pygame.K_DOWN:
+                    level.protagonista.cambiovelocidad(0, -3)
+
+        level.all_sprites.update()
+
+        screen.fill(config.black)
+
+        # Desaparece fantasma
+        ghost_hit_list = pygame.sprite.spritecollide(
+            level.protagonista, level.ghost_list, False
+        )
+
+        # Lose lives
+        for ghost in ghost_hit_list:
+            level.stats.lives -= 1
             print("lives: " + str(level.stats.lives))
+            level.protagonista.reset()
+
+        # Game over
+        if level.stats.lives == 0:
+
+            del level
+            level = Level(1)
+
+            # level.stats.lives = 3
+            print("lives: " + str(level.stats.lives))
+            # level.stats.points = 0
+            # level.stats.actual_level = 1
+            print("level: " + str(level.stats.actual_level))
+
             pygame.event.clear()
 
+        # Desaparece moneda
+        get_coin_list = pygame.sprite.spritecollide(
+            level.protagonista, level.coin_list, True
+        )
 
-    level.all_sprites.draw(screen)
+        for coin in get_coin_list:
+            level.stats.points += 1
+            print("points: " + str(level.stats.points))
 
-    pygame.display.flip()
- 
-    reloj.tick(60)
+            if len(level.coin_list) == 0:
+                # New level
+                level.stats.actual_level += 1
+                temp_lives = level.stats.lives + 1
+                temp_points = level.stats.points
 
-pygame.mixer.music.stop()
-pygame.quit()
+                if level.stats.actual_level == 4:
+                    temp_level = 1
+                else:
+                    temp_level = level.stats.actual_level
+
+                print("level: " + str(temp_level))
+
+                del level
+                level = Level(temp_level)
+                level.stats.lives = temp_lives
+                level.stats.points = temp_points
+
+                print("lives: " + str(level.stats.lives))
+                pygame.event.clear()
+
+        level.all_sprites.draw(screen)
+
+        pygame.display.flip()
+
+        reloj.tick(60)
+
+    pygame.mixer.music.stop()
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
