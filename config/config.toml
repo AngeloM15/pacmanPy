@@ -1,3 +1,6 @@
+[character]
+lives = 5
+
 [screen]
 length = 1000
 height = 600
@@ -10,6 +13,6 @@ red = [154,5,12]
 green = [8,137,44]
 
 [sprites]
-stats = '/sprites/stats.png'
-characters = '/sprites/pacman.png'
+group1 = 'group_1.png'
+group2 = 'group_2.png'
 

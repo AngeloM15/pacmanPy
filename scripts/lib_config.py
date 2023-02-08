@@ -31,6 +31,8 @@ class Config:
     stats: str
     characters: str
 
+    lives: int
+
     def __init__(self):
         self.path = ASSETS_PATH
         self.config = self.load_config(CONF_FILE["config"])
@@ -38,6 +40,7 @@ class Config:
         self.load_screen()
         self.load_color()
         self.load_sprites()
+        self.load_stats()
 
     def load_config(self, f_name):
         """Load configuration from a specific TOML file.
@@ -74,5 +77,10 @@ class Config:
     def load_sprites(self):
         sprites = self.config["sprites"]
 
-        self.stats = sprites["stats"]
-        self.characters = sprites["characters"]
+        self.group_1 = f'{ASSETS_PATH}/sprites/{sprites["group1"]}'
+        self.group_2 = f'{ASSETS_PATH}/sprites/{sprites["group2"]}'
+
+    def load_stats(self):
+        character = self.config["character"]
+
+        self.lives = character["lives"]
