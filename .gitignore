@@ -1,0 +1,10 @@
+# Folders
+/.vscode
+
+# venv
+/.pacman
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
