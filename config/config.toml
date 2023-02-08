@@ -1,0 +1,15 @@
+[screen]
+length = 1000
+height = 600
+
+[colors]
+black = [0, 0, 0] 
+white = [255, 255, 255] 
+blue = [20, 8, 137]
+red = [154,5,12]
+green = [8,137,44]
+
+[sprites]
+stats = '/sprites/stats.png'
+characters = '/sprites/pacman.png'
+
